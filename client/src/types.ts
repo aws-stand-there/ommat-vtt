@@ -12,6 +12,7 @@ export interface ApiCrawlInfoResponse {
 export interface Report {
   name: string,
   url: string,
+  opeg: number,
   commits: number,
   alive_branch_count: number,
   license: string | boolean | undefined,

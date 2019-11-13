@@ -33,6 +33,8 @@ class Analyser:
                     # 두 번 실패했으므로 스킵함
                     continue
 
+        processed_array = cls.evaluate(processed_array)
+
         print(json.dumps(processed_array, indent=4))
         return processed_array
 
@@ -156,6 +158,21 @@ class Analyser:
         print("[+] Avoiding GitHub abuse detection...")
         time.sleep(3)
         return ret
+
+    @classmethod
+    def evaluate(cls, report_list):
+        """
+        주어진 팀 정보와 해석된 Repo 정보를 바탕으로 OPEG 점수를 계산합니다.
+        @return report_list 각 팀의 점수가 담긴 Dictionary 리스트
+        """
+        for report in report_list:
+            report["opeg"] = report["commits"] * 10 \
+                           + (int(report["issue_open"]) + int(report["issue_closed"])) * 1 \
+                           + (1 if report["license"] != "" else 0) * 1 \
+                           + (int(report["pr_open"]) + int(report["pr_closed"])) * 1 \
+                           + report["contributors_count"] * 1 \
+                           + report["alive_branch_count"] * 1
+        return report_list
 
     @classmethod
     def process_url(cls, repo_list):

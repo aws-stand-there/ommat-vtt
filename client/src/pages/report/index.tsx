@@ -155,6 +155,10 @@ export class ReportPage extends React.Component<any, ReportPageState> {
                 <th scope="row">Pull Request <span className="badge badge-primary">참여 지표</span></th>
                 <td>총 <strong>{(parseInt(report.pr_open, 10) + parseInt(report.pr_closed, 10)).toLocaleString()}개</strong>: {parseInt(report.pr_open, 10).toLocaleString()}개 열림, {parseInt(report.pr_closed, 10).toLocaleString()}개 닫힘</td>
               </tr>
+              <tr>
+                <th scope="row">OPEG 점수</th>
+                <td><strong>{report.opeg}점</strong></td>
+              </tr>
             </tbody>
           </table>
         </div>
