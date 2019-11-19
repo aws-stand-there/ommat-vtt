@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import os
 import requests
 import json
 import sys
@@ -34,6 +35,7 @@ class Analyser:
                     # 두 번 실패했으므로 스킵함
                     continue
 
+        processed_array = cls.add_del_analyze(processed_array)
         processed_array = cls.evaluate(processed_array)
 
         print(json.dumps(processed_array, indent=4))
@@ -191,19 +193,96 @@ class Analyser:
         return ret
 
     @classmethod
+    def add_del_analyze(cls, report_list):
+        """
+        주어진 팀 정보에 대해 addition, deletion 수치를 측정합니다.
+        """
+
+        print("[+] Start Add/Del Analyzer")
+
+        t = time.time()
+
+        home = os.getcwd()
+
+        if not os.path.exists("./temp"):
+            os.mkdir("./temp")
+
+        for report in report_list:
+            repo_url = report["url"]
+            repo_name = report["name"]
+
+            before_scripts = [
+                "git clone {} ./temp/{} > ./temp/temp.txt".format("{}.git".format(repo_url), repo_name),
+                "cd ./temp/{}".format(repo_name),
+                "git --no-pager log --shortstat | grep 'files changed' > ./log.txt",
+            ]
+            os.system("; ".join(before_scripts))
+
+            os.system("pwd")
+
+            fileobj = open("./temp/{}/log.txt".format(repo_name), 'r')
+
+            commits = list()
+            while True:
+                line = fileobj.readline()
+                if not line: break
+
+                temp = line.split(",")
+
+                commit = dict()
+                for i in temp:
+                    if "changed" in i:
+                        commit["changed"] = int(i.replace(" files changed", "").replace(" ", "").replace("\n", ""))
+                    elif "insertions" in i:
+                        commit["add"] = int(i.replace(" insertions(+)", "").replace(" ", "").replace("\n", ""))
+                    elif "deletions" in i:
+                        commit["del"] = int(i.replace(" deletions(-)", "").replace(" ", "").replace("\n", ""))
+
+                if "add" not in commit:
+                    commit["add"] = 0
+                if "del" not in commit:
+                    commit["del"] = 0
+
+                commits.append(commit)
+
+            fileobj.close()
+
+            result = {"changed" : 0, "add" : 0, "del" : 0}
+            for commit in commits:
+                for key, value in commit.items():
+                    if key == "changed":
+                        result[key] += value < 30
+                    elif key == "add":
+                        result[key] += value < 10000
+                    elif key == "del":
+                        result[key] += value < 10000
+
+            score = result["add"] / len(commits) * 0.35 \
+                                       + result["del"] / len(commits) * 0.35 \
+                                       + result["changed"] / len(commits) * 0.3
+            report["per_valid_commit"] = round(score, 3)
+
+        os.system("rm -rf ./temp")
+
+        print("{}s".format(time.time() - t))
+        return report_list
+
+    @classmethod
     def evaluate(cls, report_list):
         """
         주어진 팀 정보와 해석된 Repo 정보를 바탕으로 OPEG 점수를 계산합니다.
         @return report_list 각 팀의 점수가 담긴 Dictionary 리스트
         """
         for report in report_list:
-            report["opeg"] = report["commits"] * 10 \
-                           + (int(report["issue_open"]) + int(report["issue_closed"])) * 1 \
-                           + (1 if report["license"] != "" else 0) * 1 \
-                           + (int(report["pr_open"]) + int(report["pr_closed"])) * 1 \
-                           + report["contributors_count"] * 1 \
-                           + report["alive_branch_count"] * 1 \
-                           + sum(report["community_profiles"].values()) * 3
+            opeg_score = report["commits"] * 10 * report["per_valid_commit"] \
+                        + (int(report["issue_open"]) + int(report["issue_closed"])) * 1 \
+                        + (1 if report["license"] != "" else 0) * 1 \
+                        + (int(report["pr_open"]) + int(report["pr_closed"])) * 1 \
+                        + report["contributors_count"] * 1 \
+                        + report["alive_branch_count"] * 1 \
+                        + sum(report["community_profiles"].values()) * 3
+            report["opeg"] = round(opeg_score, 3)
+
         return report_list
 
     @classmethod

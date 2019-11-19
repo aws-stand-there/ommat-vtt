@@ -14,6 +14,7 @@ export interface Report {
   url: string,
   opeg: number,
   commits: number,
+  per_valid_commit: number,
   alive_branch_count: number,
   license: string | boolean | undefined,
   languages: [

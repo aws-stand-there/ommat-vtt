@@ -150,6 +150,10 @@ export class ReportPage extends React.Component<any, ReportPageState> {
                 <td>총 <strong>{report.commits.toLocaleString()}개</strong></td>
               </tr>
               <tr>
+                <th scope="row">Vaild Commit <span className="badge badge-primary">참여 지표</span></th>
+                <td><strong>{report.per_valid_commit}%</strong></td>
+              </tr>
+              <tr>
                 <th scope="row">Contributor <span className="badge badge-primary">참여 지표</span></th>
                 <td>총 <strong>{report.contributors_count.toLocaleString()}명</strong>의 Official Contributor</td>
               </tr>
