@@ -162,7 +162,7 @@ export class ReportPage extends React.Component<any, ReportPageState> {
                 <td>총 <strong>{(parseInt(report.pr_open, 10) + parseInt(report.pr_closed, 10)).toLocaleString()}개</strong>: {parseInt(report.pr_open, 10).toLocaleString()}개 열림, {parseInt(report.pr_closed, 10).toLocaleString()}개 닫힘</td>
               </tr>
               <tr>
-                <th scope="row">Community Profile</th>
+                <th scope="row">Community Profile <span className="badge badge-primary">참여 지표</span></th>
                 <td>총 {totalCommunityProfiles}개 중 <strong>{checkedCommunityProfiles}개</strong> 기재됨</td>
               </tr>
               <tr>

@@ -202,7 +202,8 @@ class Analyser:
                            + (1 if report["license"] != "" else 0) * 1 \
                            + (int(report["pr_open"]) + int(report["pr_closed"])) * 1 \
                            + report["contributors_count"] * 1 \
-                           + report["alive_branch_count"] * 1
+                           + report["alive_branch_count"] * 1 \
+                           + sum(report["community_profiles"].values()) * 3
         return report_list
 
     @classmethod
