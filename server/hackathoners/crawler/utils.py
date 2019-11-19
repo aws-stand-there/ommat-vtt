@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import asyncio
 import requests
 import json
 import sys
@@ -111,28 +112,9 @@ class Analyser:
             issues = soup.select(".states")[0].text.strip().replace("Open", "").replace("Closed", "").replace(",", "").split()
             ret["issue_open"], ret["issue_closed"] = issues[0], issues[1]
 
-        # 각 기여자별 Issue 갯수 추출
-        # issue_url = "/" + code + "/issues?utf8=%E2%9C%93&q=is%3Aissue"
-        # ret["issuers"] = dict()
-        # page = 0
-        # while issue_url is not None:
-        #     page += 1
-        #     print("[+] Issue: Page " + str(page) + " crawling...")
-        #     soup = BeautifulSoup(requests.get("https://github.com" + issue_url).text, "html.parser")
-        #     for i in soup.select("ul.js-active-navigation-container li"):
-        #         issuer_name = i.select(".opened-by .muted-link")[0].get_text()
-        #         if issuer_name in ret["issuers"]:
-        #             ret["issuers"][issuer_name] += 1
-        #         else:
-        #             ret["issuers"][issuer_name] = 1
-
-        #     next_page = soup.select(".next_page")
-        #     if len(next_page) == 0:
-        #         break
-            
-        #     issue_url = next_page[0].get("href")
-
         # 열고 닫힌 Pull Requests의 갯수 추출
+        print("Real Pull Request", cls.crawl_approved_pull_requests(repo))
+        
         print("[+] Getting pull requests...")
         soup = BeautifulSoup(requests.get(repo + "/pulls").text, "html.parser")
         if len(soup.select(".states")) == 0:
@@ -189,6 +171,42 @@ class Analyser:
         print("[+] Avoiding GitHub abuse detection...")
         time.sleep(3)
         return ret
+
+    @classmethod
+    def crawl_approved_pull_requests(self, repo):
+        first_page_url = '{0}/pulls?page={1}&q=is%3Apr+is%3Aclosed+review%3Aapproved'.format(repo, 1)
+        soup = BeautifulSoup(requests.get(first_page_url).text, "html.parser")
+
+        last_page_element = soup.select_one(".pagination > a:nth-last-child(2)")
+        if last_page_element is None:
+            return len(soup.select(".js-navigation-container > .Box-row"))
+
+        last_page = int(last_page_element.text)
+        print("last page", last_page)
+
+        headers = {
+            "X-Requested-With": "XMLHttpRequest",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+            "Referrer": first_page_url,
+            "X-PJAX": "true",
+            "X-PJAX-Container": "#js-repo-pjax-container",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin"
+        }
+
+        last_page_url = '{0}/pulls?page={1}&q=is%3Apr+is%3Aclosed+review%3Aapproved'.format(repo, last_page)
+        soup = BeautifulSoup(requests.get(last_page_url, headers=headers).text, "html.parser")
+
+        print(last_page_url) 
+
+        # FIXME 마지막 페이지의 글의 개수가 정상적으로 구해지지 않음
+        last_page_article_nums = len(soup.select(".js-navigation-container > .Box-row"))
+        
+        print("last page article nums", last_page_article_nums)
+
+        print(soup.select(".repository-content"))
+
+        return (last_page - 1) * 25 + last_page_article_nums
 
     @classmethod
     def evaluate(cls, report_list):
