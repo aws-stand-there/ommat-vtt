@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import sys
+import re
 import time
 from pytz import timezone
 from datetime import datetime
@@ -70,6 +71,36 @@ class Analyser:
         ret["alive_branches"] = list()
         for branch in soup.select(".select-menu-item-text.css-truncate-target.js-select-menu-filter-text"):
             ret["alive_branches"].append(branch.string.strip())
+
+        ret["community_profiles"] = {
+            "README": False,
+            "CODE_OF_CONDUCT": False,
+            "LICENSE": False,
+            "CONTRIBUTING": False,
+            "ISSUE_TEMPLATE": False,
+            "PULL_REQUEST_TEMPLATE": False,
+        }
+
+        def update_community_profile(profile_names, file_names):
+            for profile_name in profile_names:
+                regex = re.compile(profile_name, re.IGNORECASE)
+                for file_name in file_names:
+                    if regex.search(file_name.text):
+                        ret["community_profiles"][profile_name] = True
+                        break
+
+        profile_names = list(ret["community_profiles"].keys())
+
+        # README, CODE_OF_CONDUCT, LICENSE, CONTRIBUTING 확인
+        file_names = soup.select(".file-wrap > table > tbody > .js-navigation-item > .content > span")
+        update_community_profile(profile_names[:4], file_names)
+
+        # ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE 확인
+        default_branch_name = soup.select(".css-truncate-target[data-menu-button]")[0].text
+
+        soup = BeautifulSoup(requests.get(repo + '/tree/' + default_branch_name + '/.github').text, "html.parser")
+        file_names = soup.select(".file-wrap > table > tbody > .js-navigation-item > .content > span")
+        update_community_profile(profile_names[4:], file_names)
 
         # 열고 닫힌 Issue의 갯수 추출
         print("[+] Getting issues...")
