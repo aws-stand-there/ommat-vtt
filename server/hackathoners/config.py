@@ -7,4 +7,4 @@ load_dotenv(find_dotenv())
 
 class Config:
     secret_key = os.environ.get("SECRET_KEY")
-    tinydb_document = os.environ.get("TINYDB_DOCUMENT")
+    tinydb_document = "../db.json" #os.environ.get("TINYDB_DOCUMENT")

@@ -3,7 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=macos,flask,python,windows,visualstudiocode
 
 ### Custom ###
-db/db.json
+db.json
 
 ### Flask ###
 instance/*
