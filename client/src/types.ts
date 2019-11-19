@@ -33,4 +33,12 @@ export interface Report {
       total: number[],
       week: number[]
   }
+  community_profiles: {
+    README: boolean,
+    CODE_OF_CONDUCT: boolean,
+    LICENSE: boolean,
+    CONTRIBUTING: boolean,
+    ISSUE_TEMPLATE: boolean,
+    PULL_REQUEST_TEMPLATE: boolean,
+  },
 }

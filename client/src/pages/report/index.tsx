@@ -81,6 +81,12 @@ export class ReportPage extends React.Component<any, ReportPageState> {
     // Date string by locale
     const reportDate: string = (this.state.is_ongoing!) ? "현재 Crawling 중입니다. 잠시 후 새로고침하세요." : timestamp.toLocaleDateString() + " " + timestamp.toLocaleTimeString();
 
+    // Community profiles
+    const totalCommunityProfiles = Object.keys(report.community_profiles).length;
+    const checkedCommunityProfiles = Object.keys(report.community_profiles).filter(
+      profileName => report.community_profiles[profileName] === true
+    ).length;
+
     // Language string
     const languages = report.languages.map(v => {
       const {name, percent} = v;
@@ -156,8 +162,43 @@ export class ReportPage extends React.Component<any, ReportPageState> {
                 <td>총 <strong>{(parseInt(report.pr_open, 10) + parseInt(report.pr_closed, 10)).toLocaleString()}개</strong>: {parseInt(report.pr_open, 10).toLocaleString()}개 열림, {parseInt(report.pr_closed, 10).toLocaleString()}개 닫힘</td>
               </tr>
               <tr>
+                <th scope="row">Community Profile</th>
+                <td>총 {totalCommunityProfiles}개 중 <strong>{checkedCommunityProfiles}개</strong> 기재됨</td>
+              </tr>
+              <tr>
                 <th scope="row">OPEG 점수</th>
                 <td><strong>{report.opeg}점</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="block-container">
+          <h3 className="block-title">Community Profile 정보</h3>
+          <table className="table table-bordered table-striped">
+            <tbody>
+              <tr>
+                <th scope="row" style={{ width: '30%' }}>README</th>
+                <td className="col-9">{report.community_profiles.README ? '기재됨': '없음'}</td>
+              </tr>
+              <tr>
+                <th scope="row">CODE_OF_CONDUCT</th>
+                <td>{report.community_profiles.CODE_OF_CONDUCT ? '기재됨': '없음'}</td>
+              </tr>
+              <tr>
+                <th scope="row">LICENSE</th>
+                <td>{report.community_profiles.LICENSE ? '기재됨': '없음'}</td>
+              </tr>
+              <tr>
+                <th scope="row">CONTRIBUTING</th>
+                <td>{report.community_profiles.CONTRIBUTING ? '기재됨': '없음'}</td>
+              </tr>
+              <tr>
+                <th scope="row">ISSUE_TEMPLATE</th>
+                <td>{report.community_profiles.ISSUE_TEMPLATE ? '기재됨': '없음'}</td>
+              </tr>
+              <tr>
+                <th scope="row">PULL_REQUEST_TEMPLATE</th>
+                <td>{report.community_profiles.PULL_REQUEST_TEMPLATE ? '기재됨': '없음'}</td>
               </tr>
             </tbody>
           </table>
