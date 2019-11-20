@@ -113,8 +113,6 @@ class Analyser:
             ret["issue_open"], ret["issue_closed"] = issues[0], issues[1]
 
         # 열고 닫힌 Pull Requests의 갯수 추출
-        print("Real Pull Request", cls.crawl_approved_pull_requests(repo))
-        
         print("[+] Getting pull requests...")
         soup = BeautifulSoup(requests.get(repo + "/pulls").text, "html.parser")
         if len(soup.select(".states")) == 0:
@@ -122,6 +120,8 @@ class Analyser:
         else:
             pulls = soup.select(".states")[0].text.strip().replace("Open", "").replace("Closed", "").replace(",", "").split()
             ret["pr_open"], ret["pr_closed"] = pulls[0], pulls[1]
+
+        ret["pr_approved"] = cls.crawl_approved_pull_requests(repo)
 
         # 기여자 추출
         print("[+] Getting contributors...")
@@ -177,36 +177,10 @@ class Analyser:
         first_page_url = '{0}/pulls?page={1}&q=is%3Apr+is%3Aclosed+review%3Aapproved'.format(repo, 1)
         soup = BeautifulSoup(requests.get(first_page_url).text, "html.parser")
 
-        last_page_element = soup.select_one(".pagination > a:nth-last-child(2)")
-        if last_page_element is None:
-            return len(soup.select(".js-navigation-container > .Box-row"))
+        closed_pull_requests_text = soup.select_one("#js-issues-toolbar > div > div > div.flex-auto > div > a.btn-link.selected").text
+        closed_pull_requests = int(closed_pull_requests_text.strip().replace(",", "").split()[0])
 
-        last_page = int(last_page_element.text)
-        print("last page", last_page)
-
-        headers = {
-            "X-Requested-With": "XMLHttpRequest",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
-            "Referrer": first_page_url,
-            "X-PJAX": "true",
-            "X-PJAX-Container": "#js-repo-pjax-container",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin"
-        }
-
-        last_page_url = '{0}/pulls?page={1}&q=is%3Apr+is%3Aclosed+review%3Aapproved'.format(repo, last_page)
-        soup = BeautifulSoup(requests.get(last_page_url, headers=headers).text, "html.parser")
-
-        print(last_page_url) 
-
-        # FIXME 마지막 페이지의 글의 개수가 정상적으로 구해지지 않음
-        last_page_article_nums = len(soup.select(".js-navigation-container > .Box-row"))
-        
-        print("last page article nums", last_page_article_nums)
-
-        print(soup.select(".repository-content"))
-
-        return (last_page - 1) * 25 + last_page_article_nums
+        return closed_pull_requests
 
     @classmethod
     def evaluate(cls, report_list):
@@ -219,6 +193,7 @@ class Analyser:
                            + (int(report["issue_open"]) + int(report["issue_closed"])) * 1 \
                            + (1 if report["license"] != "" else 0) * 1 \
                            + (int(report["pr_open"]) + int(report["pr_closed"])) * 1 \
+                           + int(report["pr_approved"]) * 0.5 \
                            + report["contributors_count"] * 1 \
                            + report["alive_branch_count"] * 1 \
                            + sum(report["community_profiles"].values()) * 3
