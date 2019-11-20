@@ -113,27 +113,6 @@ class Analyser:
             issues = soup.select(".states")[0].text.strip().replace("Open", "").replace("Closed", "").replace(",", "").split()
             ret["issue_open"], ret["issue_closed"] = issues[0], issues[1]
 
-        # 각 기여자별 Issue 갯수 추출
-        # issue_url = "/" + code + "/issues?utf8=%E2%9C%93&q=is%3Aissue"
-        # ret["issuers"] = dict()
-        # page = 0
-        # while issue_url is not None:
-        #     page += 1
-        #     print("[+] Issue: Page " + str(page) + " crawling...")
-        #     soup = BeautifulSoup(requests.get("https://github.com" + issue_url).text, "html.parser")
-        #     for i in soup.select("ul.js-active-navigation-container li"):
-        #         issuer_name = i.select(".opened-by .muted-link")[0].get_text()
-        #         if issuer_name in ret["issuers"]:
-        #             ret["issuers"][issuer_name] += 1
-        #         else:
-        #             ret["issuers"][issuer_name] = 1
-
-        #     next_page = soup.select(".next_page")
-        #     if len(next_page) == 0:
-        #         break
-            
-        #     issue_url = next_page[0].get("href")
-
         # 열고 닫힌 Pull Requests의 갯수 추출
         print("[+] Getting pull requests...")
         soup = BeautifulSoup(requests.get(repo + "/pulls").text, "html.parser")
@@ -142,6 +121,8 @@ class Analyser:
         else:
             pulls = soup.select(".states")[0].text.strip().replace("Open", "").replace("Closed", "").replace(",", "").split()
             ret["pr_open"], ret["pr_closed"] = pulls[0], pulls[1]
+
+        ret["pr_approved"] = cls.crawl_approved_pull_requests(repo)
 
         # 기여자 추출
         print("[+] Getting contributors...")
@@ -266,6 +247,14 @@ class Analyser:
 
         print("{}s".format(time.time() - t))
         return report_list
+    def crawl_approved_pull_requests(self, repo):
+        first_page_url = '{0}/pulls?page={1}&q=is%3Apr+is%3Aclosed+review%3Aapproved'.format(repo, 1)
+        soup = BeautifulSoup(requests.get(first_page_url).text, "html.parser")
+
+        closed_pull_requests_text = soup.select_one("#js-issues-toolbar > div > div > div.flex-auto > div > a.btn-link.selected").text
+        closed_pull_requests = int(closed_pull_requests_text.strip().replace(",", "").split()[0])
+
+        return closed_pull_requests
 
     @classmethod
     def evaluate(cls, report_list):
@@ -278,6 +267,7 @@ class Analyser:
                         + (int(report["issue_open"]) + int(report["issue_closed"])) * 1 \
                         + (1 if report["license"] != "" else 0) * 1 \
                         + (int(report["pr_open"]) + int(report["pr_closed"])) * 1 \
+                        + int(report["pr_approved"]) * 0.5 \
                         + report["contributors_count"] * 1 \
                         + report["alive_branch_count"] * 1 \
                         + sum(report["community_profiles"].values()) * 3

@@ -28,6 +28,7 @@ export interface Report {
   issue_closed: string,
   pr_open: string,
   pr_closed: string,
+  pr_approved: number,
   contributors: any,
   contributors_count: number,
   commit_graph: {
