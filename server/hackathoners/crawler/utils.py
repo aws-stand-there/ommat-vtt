@@ -196,6 +196,7 @@ class Analyser:
                 "git clone {} ./temp/{} > ./temp/temp.txt".format("{}.git".format(repo_url), repo_name),
                 "cd ./temp/{}".format(repo_name),
                 "git --no-pager log --shortstat | grep 'files changed' > ./log.txt",
+                "git log --pretty=format:'%an' > contributors.txt",
             ]
             os.system("; ".join(before_scripts))
 
@@ -243,9 +244,33 @@ class Analyser:
                                        + result["changed"] / len(commits) * 0.3
             report["per_valid_commit"] = round(score, 3)
 
+        report_list = cls.calc_total_contributor(report_list)
+
         os.system("rm -rf ./temp")
 
         print("{}s".format(time.time() - t))
+        return report_list
+
+    @classmethod
+    def calc_total_contributor(cls, report_list):
+        for report in report_list:
+            repo_name = report["name"]
+            
+            with open("./temp/{}/contributors.txt".format(repo_name)) as fileobj:
+                contributors = dict()
+                while True:
+                    line = fileobj.readline()
+                    if not line: break
+                    print(line)
+                    line = line.replace("\n", "")
+                    
+                    if line in contributors:
+                        contributors[line] += 1
+                    else:
+                        contributors[line] = 1
+
+            report["contributors"] = contributors
+            report["contributors_count"] = len(contributors)
         return report_list
 
     @classmethod
