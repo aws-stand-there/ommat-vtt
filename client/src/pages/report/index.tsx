@@ -106,6 +106,21 @@ export class ReportPage extends React.Component<any, ReportPageState> {
       return (realDate.getMonth() + 1).toString() + "/" + (realDate.getDate().toString());
     });
 
+    // Find index for cutting zero data
+    let cuttingIndex = 0;
+    for (let i = 0; i < commitTotal.length; i++) {
+      if (commitTotal[i] > 0) {
+        cuttingIndex = i;
+        break
+      }
+    }
+    commitTotal.splice(0, cuttingIndex);
+    commitLabel.splice(0, cuttingIndex);
+
+    const commitStartDateText = commitLabel[0];
+    const commitEndDateText = commitLabel[commitLabel.length - 1];
+
+
     return (
       <div className="container report__wrapper">
         <h1>분석 보고서: <span className="text-gray">{report.name}</span></h1>
@@ -224,7 +239,7 @@ export class ReportPage extends React.Component<any, ReportPageState> {
             }}/>
         </div>
         <div className="block-container">
-          <h3 className="block-title">주 단위 Commit 분포 (1년)</h3>
+          <h3 className="block-title">주 단위 Commit 분포 ({`${commitStartDateText}~${commitEndDateText}`})</h3>
           <Bar
             data={{
               labels: commitLabel,
