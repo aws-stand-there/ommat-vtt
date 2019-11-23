@@ -94,7 +94,9 @@ export class ReportPage extends React.Component<any, ReportPageState> {
     }).join(", ");
 
     // Contributor metrics
-    const contributorLabel = Object.keys(report.contributors);
+    const contributorLabel = Object.keys(report.contributors).sort(
+      (keyA: string, keyB: string) => report.contributors[keyB] - report.contributors[keyA]
+    ).slice(0, 30);
     const contributorValue: number[] = contributorLabel.map(v => {
       return report.contributors[v];
     });
@@ -190,7 +192,7 @@ export class ReportPage extends React.Component<any, ReportPageState> {
               </tr>
               <tr>
                 <th scope="row">OPEG 점수</th>
-                <td><strong>{report.opeg}점</strong></td>
+                <td><strong>{report.opeg.toLocaleString()}점</strong></td>
               </tr>
             </tbody>
           </table>
@@ -227,7 +229,7 @@ export class ReportPage extends React.Component<any, ReportPageState> {
           </table>
         </div>
         <div className="block-container">
-          <h3 className="block-title">최근 참여율 분포</h3>
+          <h3 className="block-title">전체 참여율 분포 (Top 50)</h3>
           <Doughnut
             data={{
               labels: contributorLabel,
