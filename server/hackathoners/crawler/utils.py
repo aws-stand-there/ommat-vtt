@@ -247,7 +247,9 @@ class Analyser:
 
         print("{}s".format(time.time() - t))
         return report_list
-    def crawl_approved_pull_requests(self, repo):
+
+    @classmethod
+    def crawl_approved_pull_requests(cls, repo):
         first_page_url = '{0}/pulls?page={1}&q=is%3Apr+is%3Aclosed+review%3Aapproved'.format(repo, 1)
         soup = BeautifulSoup(requests.get(first_page_url).text, "html.parser")
 
