@@ -281,6 +281,9 @@ class Analyser:
         first_page_url = '{0}/pulls?page={1}&q=is%3Apr+is%3Aclosed+review%3Aapproved'.format(repo, 1)
         soup = BeautifulSoup(requests.get(first_page_url).text, "html.parser")
 
+        if soup.select_one("#js-issues-toolbar > div > div > div.flex-auto > div > a.btn-link.selected") == None:
+            return 0
+
         closed_pull_requests_text = soup.select_one("#js-issues-toolbar > div > div > div.flex-auto > div > a.btn-link.selected").text
         closed_pull_requests = int(closed_pull_requests_text.strip().replace(",", "").split()[0])
 
