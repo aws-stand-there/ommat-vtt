@@ -17,6 +17,9 @@ class Analyser:
         Github를 크롤링해와서 분석합니다.
         :param repo_list 'owner/project_name' 꼴의 String List
         """
+        for i in range(repo_list.__len__()):
+            repo_list[i] = repo_list[i].replace('\u200b', '').replace('\n', '').replace(' ', '')
+
         url_array = cls.process_url(repo_list)
         processed_array = list()
         for repo, code in zip(url_array, repo_list):
@@ -170,7 +173,7 @@ class Analyser:
         
         # Github의 Abuse Detection을 회피하기 위한 3초 Sleep
         print("[+] Avoiding GitHub abuse detection...")
-        time.sleep(3)
+        time.sleep(4)
         return ret
 
     @classmethod
