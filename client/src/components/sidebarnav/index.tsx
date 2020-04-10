@@ -55,7 +55,7 @@ export class SidebarNav extends React.Component<any, SidebarNavState> {
 
   public renderItem = (name: string, key: number) => (
     <li className="nav-item" key={key}>
-      <a className="nav-link" href={"/repo/" + name}>
+      <a className="nav-link" href={`#/repo/${name}`}>
         {name}
       </a>
     </li>
@@ -117,7 +117,7 @@ export class SidebarNav extends React.Component<any, SidebarNavState> {
           </h6>
           <ul className="nav flex-column mb-2">
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <a className="nav-link" href="#/">
                 개요
               </a>
             </li>
@@ -129,12 +129,12 @@ export class SidebarNav extends React.Component<any, SidebarNavState> {
           </h6>
           <ul className="nav flex-column mb-2">
             <li className="nav-item">
-              <a className="nav-link" href="/update">
+              <a className="nav-link" href="#/update">
                 최신 정보 가져오기
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/settings">
+              <a className="nav-link" href="#/settings">
                 분석 정보 입력
               </a>
             </li>

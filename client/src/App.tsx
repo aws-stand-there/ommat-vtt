@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 import { Header } from 'src/components/header';
 import { SidebarNav } from 'src/components/sidebarnav';
 import { MainPage } from './pages/main';
@@ -16,14 +16,14 @@ export class App extends React.Component<any, any> {
             <div className="row">
               <SidebarNav />
               <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                <BrowserRouter>
+                <HashRouter>
                   <div>
                     <Route path="/" component={MainPage} exact={true} />
                     <Route path="/repo/:owner/:project" component={ReportPage} exact={true} />
                     <Route path="/settings" component={SettingsPage} exact={true} />
                     <Route path="/update" component={UpdatePage} exact={true} />
                   </div>
-                </BrowserRouter>
+                </HashRouter>
               </main>
             </div>
           </div>
