@@ -1,1 +1,1 @@
-export const API_SERVER_URL = "http://localhost:5000/";
+export const API_SERVER_URL = "https://ommat-vtt.minho-comcom-ai.endpoint.ainize.ai/";
