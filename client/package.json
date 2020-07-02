@@ -35,5 +35,6 @@
     "@types/react-dom": "^16.0.9",
     "gh-pages": "^2.0.1",
     "typescript": "^3.1.6"
-  }
+  },
+  "proxy": "https://ommat-vtt-backend-seonggwonyoon.endpoint.ainize.ai/"
 }
