@@ -58,9 +58,8 @@ class Analyser:
         # Commits, Branch, License 고시 여부, 언어 사용 비율 추출
         print("[+] Getting fundamental information...")
         soup = BeautifulSoup(requests.get(repo).text, "html.parser")
-        soup_normal_nums = soup.select("span.num.text-emphasized")
-        ret["commits"] = int(soup_normal_nums[0].string.replace(",", "").strip())
-        ret["alive_branch_count"] = int(soup_normal_nums[1].string.replace(",", "").strip())
+        ret["commits"] = int(soup.select("ul > li > a > span > strong")[0].string.replace(",", "").strip())
+        ret["alive_branch_count"] = int(soup.select("div > ul > li > a > strong")[0].string.replace(",", "").strip())
 
         if len(soup.select(".octicon-law")) > 0:
             ret["license"] = soup.select(".octicon-law")[0].next_element.next_element.string.replace(",", "").strip()
@@ -163,7 +162,9 @@ class Analyser:
         print("[+] Getting Pulse data...")
         commit_graph_url = "https://github.com/" + code + "/graphs/commit-activity-data"
         res = requests.get(commit_graph_url, headers=headers).json()
+        print(res)
         total, week = list(), list()
+        print(total, week)
         for i in range(52):
             total.append(res[i]['total'])
             week.append(res[i]['week'])
