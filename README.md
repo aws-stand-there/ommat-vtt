@@ -1,6 +1,9 @@
 # OMMAT
 
-## 설명
+## Summary
+
+[![Run on Ainize](https://ainize.ai/static/images/run_on_ainize_button.svg)](https://ainize.web.app/redirect?git_repo=github.com/aws-stand-there/ommat-vtt)
+
 OMMAT(Opensource Maturity Model Analysis Tool)은 오픈소스 소프트웨어 프로젝트의 성숙도를 분석하여 시각화된 데이터를 제공하는 도구입니다.
 
 오픈소스 소프트웨어는 소스 코드를 공개하고, 오픈소스 라이선스를 적용하여 해당 소스 코드를 특별한 제한 없이 누구나 보고 사용하고 수정할 수 있도록 공개한 소프트웨어를 말합니다. 이러한 오픈소스 소프트웨어의 경우 불특정 다수의 사람들이 개발에 참여하기 때문에 지속 가능한 개발을 위하여 표준화된 결과물을 유지해야 합니다. 이에 오픈소스 소프트웨어 개발자들은 오픈소스 성숙도 모델(OpenSource Maturity Model)이라는 방법론을 활용하여 오픈소스 소프트웨어를 평가하고 있습니다.
@@ -9,4 +12,32 @@ OMMAT은 오픈소스 커뮤니티(또는 개발자들)이/가 자신들의 프�
 
 국민대학교 오픈소스소프트웨어 연구실에서는 오픈소스 성숙도 모델의 다양한 지표를 정량화 하는 연구 등을 진행할 예정이며, 이를 통해 OMMAT을 오픈소스 생태계에서 의미있는 분석 도구로 발전시켜갈 계획입니다.
 
-[![Run on Ainize](https://ainize.ai/static/images/run_on_ainize_button.svg)](https://ainize.web.app/redirect?git_repo=github.com/aws-stand-there/ommat-vtt)
+## Installation
+
+First of all, Install Node.js with [fnm](https://github.com/Schniz/fnm).
+
+After fnm installed use underline commands.
+
+  1. Install fnm (node.js version manager)
+
+    fnm install latest
+
+  2. Use latest version
+
+    fnm use latest
+
+  3. Setting default latest version
+
+    fnm default latest
+  
+  4. Clone this repository
+
+    git clone git@github.com:aws-stand-there/ommat-vtt.git
+
+  5. Build your OMMAT
+
+    cd ommat-vtt/server; build -t ommat ./ --no-cache
+
+  6. Run OMMAT
+
+    docker run -d -it -p 8080:5000 --name ommat ommat:latest
