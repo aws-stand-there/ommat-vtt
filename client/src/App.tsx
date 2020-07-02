@@ -1,7 +1,8 @@
-import * as React from 'react'
+import * as React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import { Header } from 'src/components/header';
 import { SidebarNav } from 'src/components/sidebarnav';
+
 import { MainPage } from './pages/main';
 import { ReportPage } from './pages/report';
 import { SettingsPage } from './pages/settings';

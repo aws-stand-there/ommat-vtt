@@ -1,9 +1,10 @@
 import Axios, { AxiosInstance } from 'axios';
 import * as React from 'react';
 import { Badge, Button } from 'reactstrap';
+import { ApiCrawlInfoResponse } from 'src/types';
+
 import * as constants from '../../constants';
 import './update.css';
-import { ApiCrawlInfoResponse } from 'src/types';
 
 interface UpdatePageState {
   timestamp: number,

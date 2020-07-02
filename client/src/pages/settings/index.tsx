@@ -1,8 +1,9 @@
 import Axios, { AxiosInstance } from 'axios';
 import * as React from 'react';
-import {Alert, Button, FormGroup, Input, Label} from 'reactstrap';
-import './settings.css';
+import { Alert, Button, FormGroup, Input, Label } from 'reactstrap';
+
 import * as constants from '../../constants';
+import './settings.css';
 
 interface SettingsPageState {
   load: boolean,

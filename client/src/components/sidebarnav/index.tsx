@@ -1,7 +1,8 @@
 import Axios, { AxiosInstance } from 'axios';
 import * as React from 'react';
-import "./sidebarnav.css";
+
 import * as constants from '../../constants';
+import './sidebarnav.css';
 
 interface SidebarNavState {
   load: boolean,

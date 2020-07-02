@@ -1,9 +1,10 @@
 import Axios, { AxiosInstance } from 'axios';
 import * as React from 'react';
-import * as constants from '../../constants';
-import { Report } from 'src/types';
-import './report.css';
 import { Bar, Doughnut } from 'react-chartjs-2';
+import { Report } from 'src/types';
+
+import * as constants from '../../constants';
+import './report.css';
 
 interface ReportPageState {
   load: boolean,

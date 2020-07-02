@@ -1,5 +1,6 @@
-import * as React from "react";
-import "./header.css";
+import * as React from 'react';
+
+import './header.css';
 
 export class Header extends React.Component<any, any> {
   public render() {

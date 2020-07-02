@@ -28,4 +28,3 @@ class Crawl(Resource):
             thread = CrawlerThread(1, "CrawlJobTrigger", 1)
             thread.start()
             return {'status': 0}
-        
