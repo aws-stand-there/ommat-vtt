@@ -1,6 +1,6 @@
 from tinydb import TinyDB, where
 from tinydb.operations import delete
-from hackathoners.config import Config
+from ommat.config import Config
 import time
 
 """

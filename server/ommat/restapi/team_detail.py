@@ -1,8 +1,8 @@
 from flask import request
 from flask import session
 from flask_restful import Resource
-from hackathoners.config import Config
-from hackathoners.db import Database
+from ommat.config import Config
+from ommat.db import Database
 import json
 
 class TeamDetail(Resource):

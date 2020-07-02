@@ -1,9 +1,9 @@
 from flask import request
 from flask import session
 from flask_restful import Resource
-from hackathoners.config import Config
-from hackathoners.db import Database
-from hackathoners.crawler import CrawlerThread
+from ommat.config import Config
+from ommat.db import Database
+from ommat.crawler import CrawlerThread
 import json
 import time
 

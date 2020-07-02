@@ -7,8 +7,8 @@ import re
 import time
 from pytz import timezone
 from datetime import datetime
-from hackathoners.config import Config
-from hackathoners.db import Database
+from ommat.config import Config
+from ommat.db import Database
 
 class Analyser:
     @classmethod

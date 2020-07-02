@@ -1,6 +1,6 @@
 from .utils import Analyser
-from hackathoners.config import Config
-from hackathoners.db import Database
+from ommat.config import Config
+from ommat.db import Database
 
 import threading
 import time

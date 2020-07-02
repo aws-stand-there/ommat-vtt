@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask import Blueprint
 from flask_restful import Api
-from hackathoners.crawler import CrawlerThread
+from ommat.crawler import CrawlerThread
 
 def create_app(config):
     _app = Flask(__name__, static_folder='./build', static_url_path='')
@@ -14,9 +14,9 @@ def create_app(config):
     api_v1_blueprint = Blueprint('api', __name__, url_prefix="/api")
     api_v1 = Api(api_v1_blueprint)
 
-    from hackathoners.restapi.crawl import Crawl
-    from hackathoners.restapi.team_detail import TeamDetail
-    from hackathoners.restapi.team_list import TeamList
+    from ommat.restapi.crawl import Crawl
+    from ommat.restapi.team_detail import TeamDetail
+    from ommat.restapi.team_list import TeamList
 
     api_v1.add_resource(Crawl, '/crawl')
     api_v1.add_resource(TeamDetail, '/detail')

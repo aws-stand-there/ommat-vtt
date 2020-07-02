@@ -1,6 +1,6 @@
 {
-  "name": "hackathoners",
-  "homepage": "https://dexterastin.github.io/ommat-vtt",
+  "name": "ommat-vtt",
+  "homepage": "https://ommat-vtt-backend-seonggwonyoon.endpoint.ainize.ai/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
