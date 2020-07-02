@@ -5,7 +5,7 @@ from flask_restful import Api
 from hackathoners.crawler import CrawlerThread
 
 def create_app(config):
-    _app = Flask(__name__)
+    _app = Flask(__name__, static_folder='./build', static_url_path='')
     _app.config.from_object(config)
     _app.secret_key = config.secret_key
     
@@ -26,6 +26,6 @@ def create_app(config):
 
     @_app.route("/")
     def index():
-        return "<h1>OMMAT Server Ver. 1.0.0.</h1>"
+        return _app.send_static_file('index.html')
     
     return _app
