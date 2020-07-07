@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Alert, Jumbotron } from 'reactstrap';
 
+import logo from '../assets/footer.svg';
+
 export class MainPage extends React.Component<any, any> {
   public render() {
     return (
@@ -15,9 +17,9 @@ export class MainPage extends React.Component<any, any> {
           <Alert color="danger">
             <b>주의!</b> 본 서버는 <a href="https://ainize.ai">ainize.ai</a>를 통해 배포되고 있습니다.<br />
             본 프로젝트는 Github에서 오픈소스로 유지 및 관리되고 있으며, 직접 서버를 열어 무료로 사용하실 수 있습니다.
-            
           </Alert>
         </Jumbotron>
+        <img src={logo} className="ainize-footer" />
       </div>
     );
   }
